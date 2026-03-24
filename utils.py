@@ -1,3 +1,6 @@
+import copy
+
+
 OBJECT_EMPTY = None
 OBJECT_HOUSE = "🏠"
 OBJECT_HOSPITAL = "🏥"
@@ -30,7 +33,7 @@ def is_valid_move(map, move):
     return True
 
 
-def find_object(map, target_object_symbol):
+def find_objects(map, target_object_symbol):
     coordinates = []
 
     for y, rows in enumerate(map):
@@ -42,18 +45,34 @@ def find_object(map, target_object_symbol):
 
 
 def result(map, hospital_coordinates, target_move):
+    new_map = copy.deepcopy(map)
     x_hospital, y_hospital = hospital_coordinates
     x_target, y_target = target_move
 
-    map[y_target][x_target] = OBJECT_HOSPITAL
-    map[y_hospital][x_hospital] = OBJECT_EMPTY
+    new_map[y_target][x_target] = OBJECT_HOSPITAL
+    new_map[y_hospital][x_hospital] = OBJECT_EMPTY
+
+    return new_map
 
 
 def manhattan(pos, pos_2):
     x, y = pos
     x_2, y_2 = pos_2
 
-    return abs(x_2 - x) + (y_2 - y)
+    return abs(x_2 - x) + abs(y_2 - y)
+
+
+def cost(map):
+    hospitals = find_objects(map, OBJECT_HOSPITAL)
+    houses = find_objects(map, OBJECT_HOUSE)
+
+    cost = 0
+
+    for hospital in hospitals:
+        for house in houses:
+            cost += manhattan(hospital, house)
+
+    return cost
 
 
 def move(pos, pos_2):

@@ -1,9 +1,9 @@
+import hc
 import utils
 from tabulate import tabulate
 
 
-def hill_climbing(map):
-
+def main():
     return None
 
 
