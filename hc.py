@@ -1,25 +1,17 @@
 import utils
-import math
-
-
-# def get_move_weight(map, hospital):
-#     houses = utils.find_object(map, utils.OBJECT_HOUSE)
-#     cost, coordinate = (math.inf, ())
-#
-#     for house in houses:
-#         temp_cost = utils.manhattan(
-#             hospital,
-#             house,
-#         )
-#
-#         if temp_cost < cost:
-#             cost = temp_cost
-#             coordinate =
-#
-#     return cost, coordinate
 
 
 def hill_climbing(map):
+    """
+    Optimize hospital positions using hill climbing until no better neighbor is found.
+
+    Args:
+        map: Matrix (list of lists) representing the board.
+
+    Returns:
+        list[list]: A map configuration with locally minimized cost.
+    """
+
     current_map = map
     current_cost = utils.cost(current_map)
 
