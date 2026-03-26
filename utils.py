@@ -1,3 +1,5 @@
+import copy
+
 OBJECT_EMPTY = None
 OBJECT_HOUSE = "🏠"
 OBJECT_HOSPITAL = "🏥"
@@ -20,8 +22,8 @@ def is_free_to_move(map, move):
     Returns:
         bool: True if the target cell is empty (None), False otherwise.
     """
-
-    raise NotImplementedError("is_free_to_move is not implemented yet")
+    x, y = move
+    return map[y][x] == None
 
 
 def is_valid_move(map, move):
@@ -35,8 +37,11 @@ def is_valid_move(map, move):
     Returns:
         bool: True if the position is within bounds, False otherwise.
     """
+    x, y = move
+    x_bound: int = len(map[0]) - 1  
+    y_bound: int = len(map) - 1     
 
-    raise NotImplementedError("is_valid_move is not implemented yet")
+    return (0 <= x <= x_bound) and (0 <= y <= y_bound)
 
 
 def find_objects(map, target_object_symbol):
@@ -50,8 +55,14 @@ def find_objects(map, target_object_symbol):
     Returns:
         list[tuple[int, int]]: All matching coordinates as (x, y).
     """
+    list_cords = []
 
-    raise NotImplementedError("find_objects is not implemented yet")
+    for i in range(len(map)):
+        for j in range(len(map[0])):
+            if map[i][j] == target_object_symbol:
+                list_cords.append((j,i))
+
+    return list_cords
 
 
 def result(map, hospital_coordinates, target_move):
@@ -66,8 +77,14 @@ def result(map, hospital_coordinates, target_move):
     Returns:
         list[list]: A deep-copied map with the move applied.
     """
+    new_map = copy.deepcopy(map)
+    x_hospital, y_hospital = hospital_coordinates
+    x_target, y_target = target_move
 
-    raise NotImplementedError("result is not implemented yet")
+    new_map[y_target][x_target] = OBJECT_HOSPITAL
+    new_map[y_hospital][x_hospital] = None
+
+    return new_map
 
 
 def manhattan(pos, pos_2):
@@ -81,8 +98,10 @@ def manhattan(pos, pos_2):
     Returns:
         int: Distance computed as abs(x2 - x1) + abs(y2 - y1).
     """
+    x_1, y_1 = pos
+    x_2, y_2 = pos_2
 
-    raise NotImplementedError("manhattan is not implemented yet")
+    return abs(x_2 - x_1) + abs(y_2 - y_1)
 
 
 def cost(map):
@@ -95,8 +114,15 @@ def cost(map):
     Returns:
         int: Total Manhattan-distance cost.
     """
+    hospitals = find_objects(map, OBJECT_HOSPITAL)
+    houses = find_objects(map, OBJECT_HOUSE)
 
-    raise NotImplementedError("cost is not implemented yet")
+    cost = 0
+    for hospital in hospitals:
+        for house in houses:
+            cost += manhattan(hospital, house)
+    
+    return cost
 
 
 def move(pos, pos_2):
@@ -110,8 +136,10 @@ def move(pos, pos_2):
     Returns:
         tuple[int, int]: New coordinate as (x1 + x2, y1 + y2).
     """
+    x_1, y_1 = pos
+    x_2, y_2 = pos_2
 
-    raise NotImplementedError("move is not implemented yet")
+    return (x_1 + x_2, y_1 + y_2)
 
 
 def actions(map, hospital_position):
@@ -125,5 +153,17 @@ def actions(map, hospital_position):
     Returns:
         list[tuple[int, int]]: Valid neighboring positions that are in bounds and free.
     """
+    actions = []
+    x_hospital, y_hospital = hospital_position
+    
+    moves = [MOVE_UP, MOVE_DOWN, MOVE_LEFT, MOVE_RIGHT]
 
-    raise NotImplementedError("actions is not implemented yet")
+    for dx, dy in moves:
+        new_x = x_hospital + dx
+        new_y = y_hospital + dy
+
+        if 0 <= new_y < len(map) and 0 <= new_x < len(map[0]):
+            if map[new_y][new_x] is None:
+                actions.append((new_x, new_y))        
+
+    return actions

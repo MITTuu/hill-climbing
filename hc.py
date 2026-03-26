@@ -41,5 +41,26 @@ def hill_climbing(map):
     Returns:
         list[list]: A map configuration with locally minimized cost.
     """
+    current_map = map
+    current_cost = utils.cost(current_map)
 
-    raise NotImplementedError("hill_climbing is not implemented yet")
+    while True:
+        best_map = current_map
+        best_cost = current_cost
+
+        for hospital in utils.find_objects(current_map, utils.OBJECT_HOSPITAL):
+            for candidate_move in utils.actions(current_map, hospital):
+                candidate_map = utils.result(current_map, hospital, candidate_move)
+                candidate_cost = utils.cost(candidate_map)
+
+                if candidate_cost < best_cost:
+                    best_map = candidate_map
+                    best_cost = candidate_cost
+
+        if best_cost < current_cost:
+            current_map = best_map
+            current_cost = best_cost
+        else:
+            break
+
+    return current_map
